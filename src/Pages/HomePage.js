@@ -1,6 +1,25 @@
-const HomePage = () => (
-  <>
+import { getAuth, signOut } from "firebase/auth";
+
+import { useNavigate } from "react-router-dom";
+const HomePage = () => {
+    const navigate=useNavigate();
+    return (<>
   <h1>Hello, welcome to my blog!</h1>
+  <button onClick={()=>{
+    navigate('/login');
+  }}>LogIn</button>
+  <button onClick={()=>{
+
+    const auth = getAuth();
+    signOut(auth).then(() => {
+        console.log("Out");
+        navigate('/login');
+    }).catch((error) => {
+      // An error happened.
+      console.log(error);
+    });
+  }}>Logout</button>
+  
   <p>
       Welcome to my blog! Proin congue
       ligula id risus posuere, vel eleifend ex egestas. Sed in turpis leo. 
@@ -26,6 +45,7 @@ const HomePage = () => (
       consequat quam. Vivamus accumsan dui in facilisis aliquet.,
   </p>
   </>
-);
+    )
+};
 
 export default HomePage;

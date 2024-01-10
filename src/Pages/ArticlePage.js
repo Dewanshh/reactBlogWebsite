@@ -6,13 +6,14 @@ import NotFoundPage from './NotFoundPage';
 import axios from 'axios';
 import CommentsList from '../Components/CommentsList';
 import AddComment from '../Components/AddComment';
+import useUser from '../hooks/useUser';
 
 function ArticlePage() {
 
     const [articleInfo,setArticleInfo]=useState({comments:[],upvotes:0});
     const [upVoted,setUpVoted]=useState(false);
     const {articleId}=useParams();
-
+    const {user,isLoading}=useUser();
     useEffect( ()=>{
         // const{articleId}=useParams();
         async function fetchData(){
@@ -41,12 +42,13 @@ function ArticlePage() {
     return (<>
       <h1>{article.title}</h1>
       <p>This post has {articleInfo.upvotes} upvote(s) </p>
-      {upVoted? <p className='ds'>Upvoted!</p>: <button onClick={upvote}>Upvote</button>}
+
+     {user ? (!upVoted ? <button onClick={upvote}>Upvote</button> : <p>Upvoted</p> ): <button>Login For Upvote</button> }
       {
         article.content.map((paragraph,i)=>(
             <p key={i}>{paragraph}</p>
             ))}
-            <AddComment articleName={article.name} onArticleUpdated={(updatedArticle)=>setArticleInfo(updatedArticle)}/>
+            {user?<AddComment articleName={article.name} onArticleUpdated={(updatedArticle)=>setArticleInfo(updatedArticle)}/>:<button>Login to Add Comment</button>}
             <CommentsList comments={articleInfo.comments} />
     </>
   )
